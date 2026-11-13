@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional Website Design &amp; Development | Kryptonite Tech Solutions</title>
+  <meta name="description"
+    content="Get a fast, professional, mobile-friendly website built to bring in customers. Packages from $499 with delivery in as little as 14 days.">
+  <style>
+    :root {
+      --primary: #0b3d91;
+      --accent: #00c2a8;
+      --dark: #0d1b2a;
+      --light: #f4f7fb;
+      --muted: #5b6878;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--dark);
+      padding: 0.85rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 2px solid #fff;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--dark), var(--primary));
+      color: #fff;
+      text-align: center;
+      padding: 6rem 5%;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      max-width: 680px;
+      margin: 0 auto 2rem;
+      opacity: 0.92;
+    }
+
+    .hero .note {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    section {
+      padding: 4rem 5%;
+    }
+
+    section h2 {
+      text-align: center;
+      margin-bottom: 0.8rem;
+      font-size: 2.1rem;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--light);
+      padding: 2rem;
+      border-radius: 10px;
+      border-top: 4px solid var(--accent);
+    }
+
+    .card h3 {
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .pain {
+      background: var(--light);
+    }
+
+    .pricing .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border: 1px solid #dde4ee;
+      border-top: 4px solid var(--primary);
+    }
+
+    .pricing .featured {
+      border-top-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(11, 61, 145, 0.15);
+    }
+
+    .badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--dark);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.25rem 0.8rem;
+      border-radius: 20px;
+    }
+
+    .price {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .price small {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .pricing ul {
+      list-style: none;
+      margin: 1.2rem 0 2rem;
+      flex-grow: 1;
+    }
+
+    .pricing li {
+      padding: 0.45rem 0;
+      border-bottom: 1px solid #eef2f7;
+      font-size: 0.97rem;
+    }
+
+    .pricing li::before {
+      content: "\2713  ";
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .pricing .btn {
+      text-align: center;
+    }
+
+    .steps {
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      padding-left: 3.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .step h3 {
+      color: var(--primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .process {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .faq {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .faq details {
+      background: var(--light);
+      padding: 1rem 1.3rem;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+    }
+
+    .faq summary {
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    .faq p {
+      margin-top: 0.6rem;
+      color: var(--muted);
+    }
+
+    .cta {
+      background: var(--primary);
+      color: #fff;
+      text-align: center;
+    }
+
+    .cta h2 {
+      color: #fff;
+    }
+
+    .cta p {
+      max-width: 620px;
+      margin: 0 auto 2rem;
+      opacity: 0.92;
+      font-size: 1.1rem;
+    }
+
+    form {
+      max-width: 560px;
+      margin: 0 auto;
+      display: grid;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 0.8rem;
+      border: 1px solid #ccd6e0;
+      border-radius: 6px;
+      font: inherit;
+      width: 100%;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .cta button {
+      background: var(--accent);
+      color: var(--dark);
+      border: none;
+      padding: 0.9rem;
+      border-radius: 6px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cta button:hover {
+      opacity: 0.9;
+    }
+
+    footer {
+      background: var(--dark);
+      color: #aab4c0;
+      text-align: center;
+      padding: 2rem 5%;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 2.1rem;
+      }
+
+      section h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">Kryptonite Tech Solutions</div>
+    <nav>
+      <a href="./bizbuddy.html">Bizbuddy AI</a>
+      <a href="#packages">Packages</a>
+      <a href="#process">Process</a>
+      <a href="#faq">FAQ</a>
+      <a href="./contact.html">Contact</a>
+      <a href="https://portfolio-manomaytare.netlify.app/">Portfolio</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>A Website That Brings You Customers,<br>Not Just a Pretty Page</h1>
+    <p>We build fast, professional, mobile-friendly websites for small businesses, so people can find you, trust you,
+      and contact you.</p>
+    <a href="./contact.html" class="btn">Get Your Free Quote</a>
+    <p class="note">Most projects are delivered within 14 days.</p>
+  </section>
+
+  <section class="pain">
+    <h2>Is Your Website Costing You Customers?</h2>
+    <p class="subtitle">If your site is slow, outdated, or hard to use on a phone, potential customers leave before they
+      ever contact you.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Slow and Outdated</h3>
+        <p>Visitors expect pages to load in seconds. Every extra second of waiting sends people to your competitors.</p>
+      </div>
+      <div class="card">
+        <h3>Unclear Message</h3>
+        <p>If visitors can't tell what you offer in five seconds, they won't stay to find out.</p>
+      </div>
+      <div class="card">
+        <h3>No Clear Next Step</h3>
+        <p>A strong site guides visitors toward a call, a booking, or a purchase instead of leaving them to guess.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="packages" class="pricing">
+    <h2>Website Packages</h2>
+    <p class="subtitle">Clear, fixed prices with no hidden fees. Choose the package that fits your business today.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Starter</h3>
+        <div class="price">₹5999 <small>one-time</small></div>
+        <p>A simple, professional site to establish your online presence.</p>
+        <ul>
+          <li>Up to 5 pages</li>
+          <li>Mobile-friendly design</li>
+          <li>Contact form</li>
+          <li>Basic search engine setup</li>
+          <li>Delivery in about 14 days</li>
+        </ul>
+        <a href="./payment.html" class="btn">Choose Starter</a>
+      </div>
+      <div class="card featured">
+        <span class="badge">Most Popular</span>
+        <h3>Business</h3>
+        <div class="price">₹9999 <small>one-time</small></div>
+        <p>A complete site built to generate enquiries and grow your business.</p>
+        <ul>
+          <li>Up to 10 pages</li>
+          <li>Custom design tailored to your brand</li>
+          <li>Booking or enquiry forms</li>
+          <li>Speed and SEO optimisation</li>
+          <li>Google Business Profile setup guidance</li>
+          <li>Basic analytics setup</li>
+        </ul>
+        <a href="./payment.html" class="btn">Choose Business</a>
+      </div>
+      <div class="card">
+        <h3>Premium</h3>
+        <div class="price">₹19,999 <small>one-time</small></div>
+        <p>A high-end site with advanced features for established companies.</p>
+        <ul>
+          <li>Unlimited pages</li>
+          <li>Custom features and integrations</li>
+          <li>E-commerce ready</li>
+          <li>Advanced SEO strategy</li>
+          <li>Priority support for 30 days</li>
+        </ul>
+        <a href="./payment.html" class="btn">Choose Premium</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" class="pain">
+    <h2>How It Works</h2>
+    <p class="subtitle">A simple, transparent process from first call to launch.</p>
+    <div class="process steps">
+      <div class="step">
+        <h3>Discovery Call</h3>
+        <p>We learn about your business, your customers, and what you want the site to achieve.</p>
+      </div>
+      <div class="step">
+        <h3>Design Preview</h3>
+        <p>You review a design concept before we build anything, so you approve the direction first.</p>
+      </div>
+      <div class="step">
+        <h3>Build and Feedback</h3>
+        <p>We develop the site and share it with you for revisions until it's right.</p>
+      </div>
+      <div class="step">
+        <h3>Launch and Support</h3>
+        <p>We publish your site, test it on all devices, and show you how to keep it up to date.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>Frequently Asked Questions</h2>
+    <p class="subtitle">Answers to the questions we hear most often.</p>
+    <div class="faq">
+      <details>
+        <summary>Do I need to own a domain name already?</summary>
+        <p>No. We can help you choose and register a domain name as part of your package.</p>
+      </details>
+      <details>
+        <summary>Will my website work on phones?</summary>
+        <p>Yes. Every site we build is responsive, so it looks and works well on phones, tablets, and desktops.</p>
+      </details>
+      <details>
+        <summary>Can I update the content myself?</summary>
+        <p>Yes. We set up your site so you can make simple text and image changes without any technical skills.</p>
+      </details>
+      <details>
+        <summary>Are there any ongoing fees?</summary>
+        <p>Your package price is one-time. Hosting and domain renewals are billed separately by the provider, and we'll
+          show you the costs upfront.</p>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Kryptonite Tech Solutions. All rights reserved.</p>
+  </footer>
+
+</body>
+
+</html>

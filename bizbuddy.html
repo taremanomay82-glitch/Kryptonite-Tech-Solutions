@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BizBuddy AI | Business Assistant</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #080b12;
+            --panel: #101622;
+            --panel2: #151e2d;
+            --border: #263247;
+            --text: #eef3fc;
+            --muted: #94a3b8;
+            --accent: #7c5cff;
+            --accent2: #25c7a5;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        button,
+        input {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .sidebar {
+            width: 265px;
+            background: #0c111b;
+            border-right: 1px solid var(--border);
+            padding: 22px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 21px;
+            font-weight: 800
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #7658ff, #20c9a5);
+            font-size: 22px;
+        }
+
+        .logo small {
+            display: block;
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 2px
+        }
+
+        .new-chat {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: white;
+            padding: 13px;
+            border-radius: 11px;
+            text-align: left;
+        }
+
+        .new-chat:hover,
+        .suggestion:hover {
+            border-color: var(--accent)
+        }
+
+        .side-label {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1.5px
+        }
+
+        .side-link {
+            background: transparent;
+            color: #bdc8da;
+            border: 0;
+            padding: 10px;
+            border-radius: 9px;
+            text-align: left;
+        }
+
+        .side-link:hover {
+            background: var(--panel2)
+        }
+
+        .sidebar-bottom {
+            margin-top: auto
+        }
+
+        .profile {
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #283754;
+            display: grid;
+            place-items: center;
+        }
+
+        .profile small {
+            color: var(--muted)
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0
+        }
+
+        .topbar {
+            height: 70px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+        }
+
+        .topbar span {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .status {
+            color: var(--accent2) !important
+        }
+
+        .chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 7%;
+            scroll-behavior: smooth;
+        }
+
+        .welcome {
+            max-width: 760px;
+            margin: 55px auto 25px;
+            text-align: center
+        }
+
+        .welcome h1 {
+            font-size: clamp(30px, 5vw, 46px);
+            margin-bottom: 13px
+        }
+
+        .gradient {
+            background: linear-gradient(90deg, #9b85ff, #29d7b2);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .welcome p {
+            color: var(--muted);
+            line-height: 1.7
+        }
+
+        .suggestions {
+            max-width: 800px;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .suggestion {
+            text-align: left;
+            padding: 17px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            color: var(--text);
+        }
+
+        .suggestion strong {
+            display: block;
+            margin-bottom: 6px
+        }
+
+        .suggestion small {
+            color: var(--muted)
+        }
+
+        .message {
+            max-width: 850px;
+            margin: 0 auto 24px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            animation: appear .25s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse
+        }
+
+        .msg-avatar {
+            flex-shrink: 0;
+            width: 35px;
+            height: 35px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: #283653;
+        }
+
+        .user .msg-avatar {
+            background: #6047d9
+        }
+
+        .msg-content {
+            max-width: 85%;
+            line-height: 1.75
+        }
+
+        .msg-name {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 5px
+        }
+
+        .msg-text {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 14px 17px;
+            border-radius: 5px 15px 15px 15px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .user .msg-text {
+            background: #30265e;
+            border-color: #5746a2;
+            border-radius: 15px 5px 15px 15px;
+        }
+
+        .typing {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .composer-wrap {
+            padding: 15px 7% 20px;
+            border-top: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .composer {
+            max-width: 850px;
+            margin: auto;
+            display: flex;
+            gap: 10px;
+            padding: 9px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .composer input {
+            flex: 1;
+            min-width: 0;
+            background: transparent;
+            border: 0;
+            outline: none;
+            color: white;
+            padding: 10px;
+        }
+
+        .send {
+            width: 43px;
+            height: 43px;
+            border: 0;
+            border-radius: 11px;
+            background: var(--accent);
+            color: white;
+            font-size: 19px;
+        }
+
+        .send:hover {
+            background: #6545e8
+        }
+
+        .disclaimer {
+            text-align: center;
+            color: #64748b;
+            font-size: 10px;
+            margin-top: 10px;
+        }
+
+        .quick {
+            display: flex;
+            gap: 8px;
+            max-width: 850px;
+            margin: 0 auto 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .quick button {
+            white-space: nowrap;
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .quick button:hover {
+            color: white;
+            border-color: var(--accent)
+        }
+
+        @media(max-width:700px) {
+            .sidebar {
+                display: none
+            }
+
+            .topbar {
+                padding: 0 16px
+            }
+
+            .chat {
+                padding: 18px 14px
+            }
+
+            .composer-wrap {
+                padding: 12px
+            }
+
+            .suggestions {
+                grid-template-columns: 1fr
+            }
+
+            .welcome {
+                margin-top: 40px
+            }
+
+            .msg-content {
+                max-width: 90%
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">🚀</div>
+            <div>BizBuddy<small>AI BUSINESS PARTNER</small></div>
+        </div>
+
+        <button class="new-chat" onclick="newChat()">＋ New conversation</button>
+
+        <div class="side-label">WORKSPACE</div>
+        <button class="side-link" onclick="ask('How do I start a business?')">◈ Start a business</button>
+        <button class="side-link" onclick="ask('Give me a marketing strategy')">◈ Marketing</button>
+        <button class="side-link" onclick="ask('How do I increase sales?')">◈ Sales growth</button>
+        <button class="side-link" onclick="ask('How should I price my services?')">◈ Pricing</button>
+        <button class="side-link" onclick="ask('How do I manage finances?')">◈ Finance</button>
+        <button class="side-link" onclick="ask('How do I get clients?')">◈ Find clients</button>
+
+        <div class="sidebar-bottom">
+            <div class="profile">
+                <div class="avatar">👤</div>
+                <div><strong>Business Owner</strong><br><small>BizBuddy workspace</small></div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <strong>BizBuddy <span> / AI Assistant</span></strong>
+            <span class="status">● Online</span>
+        </header>
+
+        <section class="chat" id="chat">
+            <div id="welcome">
+                <div class="welcome">
+                    <h1>Your business.<br><span class="gradient">Your next big move.</span></h1>
+                    <p>Your AI business advisor. Ask about starting a company,
+                        finding customers, marketing, sales, pricing, freelancing,
+                        managing money and growing your business.</p>
+                </div>
+
+                <div class="suggestions">
+                    <button class="suggestion" onclick="ask('How do I start a business with a small budget?')">
+                        <strong>🚀 Start a business</strong>
+                        <small>Find a business idea and make a plan</small>
+                    </button>
+                    <button class="suggestion" onclick="ask('How do I get my first 10 clients?')">
+                        <strong>🎯 Get more clients</strong>
+                        <small>Build a customer acquisition strategy</small>
+                    </button>
+                    <button class="suggestion" onclick="ask('Give me a social media marketing strategy')">
+                        <strong>📢 Marketing strategy</strong>
+                        <small>Promote your business effectively</small>
+                    </button>
+                    <button class="suggestion" onclick="ask('How should I price my services?')">
+                        <strong>💰 Pricing advice</strong>
+                        <small>Charge confidently and profitably</small>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="composer-wrap">
+            <div class="quick">
+                <button onclick="ask('Business ideas')">💡 Ideas</button>
+                <button onclick="ask('Marketing tips')">📢 Marketing</button>
+                <button onclick="ask('How to make more sales')">📈 Sales</button>
+                <button onclick="ask('Pricing strategy')">💰 Pricing</button>
+                <button onclick="ask('Freelancing advice')">💻 Freelancing</button>
+            </div>
+            <form class="composer" id="form">
+                <input id="input" placeholder="Ask BizBuddy anything about business..." autocomplete="off">
+                <button class="send" type="submit">➤</button>
+            </form>
+            <div class="disclaimer">BizBuddy AI can make mistakes. Verify important business, legal and financial
+                decisions.</div>
+        </div>
+    </main>
+
+    <script>
+
+        // ======================================================
+        // BIZBUDDY AI KNOWLEDGE BASE
+        // 110+ PREDEFINED BUSINESS RESPONSES
+        // ======================================================
+
+        const knowledge = [
+
+            { keys: ["start business", "starting business", "start a business", "new business"], answer: "🚀 STARTING A BUSINESS\n\n1. Identify a problem people are willing to pay to solve.\n2. Choose a product or service.\n3. Research 5–10 competitors.\n4. Talk to potential customers.\n5. Create a simple business plan.\n6. Calculate your starting costs.\n7. Test your offer with a few customers before investing heavily.\n\nTIP: Start small, validate demand, and expand when customers show interest." },
+
+            { keys: ["business ideas", "business idea"], answer: "💡 BUSINESS IDEAS\n\nHere are 10 ideas to explore:\n1. Website design agency\n2. Social media management\n3. Graphic design services\n4. Video editing\n5. Online tutoring\n6. Digital products\n7. Local marketing agency\n8. Photography services\n9. Custom merchandise\n10. Small-business automation.\n\nChoose an idea based on your skills, available time, budget and customer demand." },
+
+            { keys: ["small budget", "low budget", "no money", "zero investment"], answer: "💸 STARTING WITH A SMALL BUDGET\n\nTry a service business instead of buying inventory.\n\n• Use free design and productivity tools.\n• Build a portfolio using sample projects.\n• Find customers through personal connections and public business listings.\n• Collect feedback before expanding.\n• Reinvest a portion of genuine profits.\n\nAvoid borrowing money for an untested idea." },
+
+            { keys: ["business plan"], answer: "📋 SIMPLE BUSINESS PLAN\n\nYour plan should contain:\n1. Business name and description.\n2. Customer problem.\n3. Target customers.\n4. Product or service.\n5. Competitor analysis.\n6. Marketing strategy.\n7. Pricing structure.\n8. Startup expenses.\n9. Revenue and expense estimates.\n10. Three-month action plan.\n\nKeep it practical. A one-page plan is better than a 40-page plan you never use." },
+
+            { keys: ["business name", "company name", "brand name"], answer: "🏷️ BUSINESS NAMING TIPS\n\nA strong name should be:\n• Easy to pronounce.\n• Easy to remember.\n• Relevant to your brand.\n• Available as a domain and social handle.\n• Distinctive from competitors.\n\nCheck trademarks and business-name availability before using it commercially." },
+
+            { keys: ["logo", "branding", "brand identity"], answer: "🎨 BUILDING YOUR BRAND\n\nCreate these five brand elements:\n1. Logo.\n2. Two or three brand colors.\n3. Typography.\n4. Brand voice.\n5. A consistent visual style.\n\nYour brand should communicate what you do and why customers should trust you." },
+
+            { keys: ["target audience", "target market", "ideal customer"], answer: "🎯 FIND YOUR TARGET AUDIENCE\n\nDefine:\n• Who needs your service?\n• What problem do they have?\n• What alternatives do they currently use?\n• Where do they discover businesses?\n• What would make them choose you?\n\nBuild one clear customer profile rather than trying to sell to everyone." },
+
+            { keys: ["competitor", "competition", "competitor analysis"], answer: "🔎 COMPETITOR RESEARCH\n\nStudy five competitors.\n\nCompare their:\n• Services.\n• Prices.\n• Website quality.\n• Customer reviews.\n• Social media activity.\n• Strengths and weaknesses.\n\nFind a genuine gap you can serve. Don't simply copy their business." },
+
+            { keys: ["market research"], answer: "📊 MARKET RESEARCH\n\nThis week:\n1. Identify 10 potential customers.\n2. Ask what problem they face.\n3. Ask what solutions they already use.\n4. Study competing offers.\n5. Test one simple offer.\n6. Record the feedback.\n\nReal customer conversations are more useful than assumptions." },
+
+            { keys: ["validate", "validation", "test my idea"], answer: "🧪 VALIDATE YOUR IDEA\n\nBefore investing heavily:\n1. Create a simple description of your offer.\n2. Show it to potential customers.\n3. Ask whether they would pay for it.\n4. Offer a small pilot project.\n5. Measure actual interest and feedback.\n\nCompliments are nice. Paying customers are stronger evidence of demand." },
+
+            { keys: ["first customer", "first client", "first sale"], answer: "🤝 GET YOUR FIRST CUSTOMER\n\n1. Choose a specific customer type.\n2. Prepare one clear service offer.\n3. Create two sample projects.\n4. Contact relevant prospects politely.\n5. Show how your service solves a real problem.\n6. Follow up once if appropriate.\n7. Deliver excellent work and request feedback.\n\nFocus on helping one customer well." },
+
+            { keys: ["10 clients", "more clients", "get clients", "find clients"], answer: "🎯 CLIENT ACQUISITION PLAN\n\nTry this weekly system:\n• Research 20 relevant businesses.\n• Identify a specific improvement you can offer.\n• Prepare 5 personalized messages per day.\n• Share useful examples of your work.\n• Track replies and follow-ups.\n• Improve your pitch using feedback.\n\nQuality and relevance matter more than sending hundreds of generic messages." },
+
+            { keys: ["cold email", "cold outreach", "outreach"], answer: "📧 EFFECTIVE OUTREACH\n\nA good message includes:\n1. A personal opening.\n2. One observation about the business.\n3. A specific problem you can solve.\n4. A short description of your offer.\n5. A simple next step.\n\nAvoid exaggerated promises and mass-spam messages." },
+
+            { keys: ["sales strategy", "increase sales", "more sales"], answer: "📈 INCREASE YOUR SALES\n\n1. Make your offer easier to understand.\n2. Explain the customer benefit.\n3. Add relevant examples or testimonials.\n4. Reduce unnecessary buying friction.\n5. Respond to inquiries promptly.\n6. Follow up professionally.\n7. Review why prospects decline.\n\nImprove the customer experience before simply increasing advertising spend." },
+
+            { keys: ["sales pitch", "pitch"], answer: "🎤 SALES PITCH FORMULA\n\nUse this structure:\n\n\"I help [customer type] solve [problem] through [service]. This helps them [realistic benefit]. Would you be interested in discussing whether it fits your business?\"\n\nKeep your pitch under 30 seconds when speaking." },
+
+            { keys: ["handle objections", "objections", "too expensive"], answer: "🧠 HANDLING CUSTOMER OBJECTIONS\n\nWhen a customer says it's expensive:\n• Ask which part of the offer concerns them.\n• Explain exactly what is included.\n• Connect the price to the work and value delivered.\n• Offer a smaller scope if appropriate.\n• Respect their decision.\n\nNever pressure someone into buying." },
+
+            { keys: ["close deals", "closing sales", "close a sale"], answer: "🤝 CLOSING A SALE\n\nBefore asking for a decision:\n1. Confirm the customer's needs.\n2. Explain the solution.\n3. Clarify deliverables.\n4. Confirm timeline and price.\n5. Answer questions.\n6. Explain the next step.\n\nA good close feels like a natural conclusion to a useful conversation." },
+
+            { keys: ["follow up", "follow-up"], answer: "📨 FOLLOW-UP STRATEGY\n\nA simple follow-up sequence:\n• First message: Introduce your offer.\n• After 3–5 business days: Send one polite follow-up.\n• Later: Share a useful example or update if relevant.\n\nIf they decline or ask you to stop, respect that immediately." },
+
+            { keys: ["pricing", "price my service", "how much charge", "charge"], answer: "💰 PRICING YOUR SERVICES\n\nConsider:\n• Time required.\n• Skill and experience.\n• Software and operating costs.\n• Project complexity.\n• Customer value.\n• Competitor pricing.\n\nExample: If a project takes 10 hours and your target rate is ₹500/hour, the labor component is ₹5,000. Add other costs and a suitable margin.\n\nExplain exactly what your price includes." },
+
+            { keys: ["discount", "discounts", "offer discount"], answer: "🏷️ DISCOUNT STRATEGY\n\nUse discounts carefully.\n\nBetter options include:\n• First-project introductory pricing.\n• Bundled services.\n• Limited-scope packages.\n• Referral incentives.\n• Seasonal promotions.\n\nAlways calculate the profit impact before offering a discount." },
+
+            { keys: ["profit margin", "margin"], answer: "📊 UNDERSTANDING PROFIT MARGIN\n\nProfit margin = (Profit ÷ Revenue) × 100.\n\nExample:\nRevenue = ₹10,000\nTotal costs = ₹6,000\nProfit = ₹4,000\nProfit margin = 40%.\n\nRemember to include all relevant business expenses." },
+
+            { keys: ["break even", "break-even"], answer: "⚖️ BREAK-EVEN POINT\n\nBreak-even means revenue covers your costs.\n\nFormula:\nBreak-even units = Fixed costs ÷ (Selling price per unit − Variable cost per unit).\n\nExample:\nFixed costs = ₹10,000\nPrice = ₹500\nVariable cost = ₹300\nBreak-even = 50 units.\n\nThis is a planning estimate, not a sales guarantee." },
+
+            { keys: ["revenue", "turnover"], answer: "💵 UNDERSTANDING REVENUE\n\nRevenue is the money your business earns from sales before expenses are deducted.\n\nTrack revenue by:\n• Product or service.\n• Customer.\n• Month.\n• Sales channel.\n\nNever confuse revenue with profit." },
+
+            { keys: ["cash flow", "cashflow"], answer: "💧 CASH FLOW MANAGEMENT\n\nCash flow tracks money entering and leaving your business.\n\nPractical habits:\n1. Track invoices and payment dates.\n2. Follow up on overdue payments.\n3. Forecast upcoming expenses.\n4. Avoid unnecessary subscriptions.\n5. Maintain a suitable emergency reserve.\n6. Review cash flow weekly." },
+
+            { keys: ["budget", "budgeting"], answer: "📒 CREATE A BUSINESS BUDGET\n\nList:\n• Expected income.\n• Fixed expenses.\n• Variable expenses.\n• Marketing costs.\n• Equipment costs.\n• Emergency reserve.\n\nCompare actual spending with your budget every week. Adjust your plan when reality changes." },
+
+            { keys: ["expenses", "business costs", "reduce costs"], answer: "✂️ REDUCE BUSINESS EXPENSES\n\nReview your expenses:\n1. Cancel unused subscriptions.\n2. Compare supplier pricing.\n3. Reduce unnecessary software purchases.\n4. Automate repetitive administrative work.\n5. Negotiate recurring service costs.\n\nDon't cut essential quality or customer support just to save money." },
+
+            { keys: ["save money", "saving"], answer: "🏦 BUSINESS SAVINGS HABITS\n\n• Separate business and personal records.\n• Set aside money for upcoming bills and taxes.\n• Build an operating reserve.\n• Review recurring expenses.\n• Avoid purchasing equipment before it is needed.\n\nConsult a qualified professional for tax and accounting decisions." },
+
+            { keys: ["investment", "invest in business"], answer: "📈 INVESTING IN YOUR BUSINESS\n\nPrioritize investments that solve an identified problem:\n• Essential equipment.\n• Customer acquisition.\n• Better delivery systems.\n• Useful software.\n• Training that improves your service.\n\nCompare expected benefits with the full cost and risks before committing." },
+
+            { keys: ["loan", "business loan", "borrow money"], answer: "🏦 BUSINESS LOANS\n\nBefore borrowing:\n1. Calculate the full repayment amount.\n2. Compare interest rates and fees.\n3. Estimate repayment capacity.\n4. Check whether the purchase is essential.\n5. Consider a lower-cost alternative.\n\nBorrowing for an untested idea can create serious financial pressure. Consult a qualified financial professional." },
+
+            { keys: ["tax", "gst", "taxes"], answer: "🧾 TAX AND GST BASICS\n\nBusiness tax obligations depend on your location, structure, income and activities.\n\nGood habits:\n• Maintain accurate invoices.\n• Keep expense records.\n• Separate business transactions.\n• Track filing deadlines.\n• Consult a qualified Indian CA for GST and income-tax questions.\n\nDo not assume every small business has identical registration requirements." },
+
+            { keys: ["invoice", "invoicing"], answer: "🧾 CREATE PROFESSIONAL INVOICES\n\nInclude:\n• Your business details.\n• Customer details.\n• Invoice number and date.\n• Service description.\n• Quantity and price.\n• Applicable taxes.\n• Total amount.\n• Payment terms.\n\nUse sequential invoice numbers and keep copies." },
+
+            { keys: ["payment", "late payment", "get paid"], answer: "💳 GETTING PAID ON TIME\n\n1. Agree on payment terms before work begins.\n2. Send invoices promptly.\n3. Use clear due dates.\n4. Send polite reminders.\n5. Keep proof of agreed deliverables.\n6. Consider milestone payments for larger projects.\n\nNever leave payment expectations unclear." },
+
+            { keys: ["marketing strategy", "marketing plan"], answer: "📢 MARKETING STRATEGY\n\nA simple marketing system:\n1. Choose one target audience.\n2. Identify their biggest problem.\n3. Create one clear offer.\n4. Select two marketing channels.\n5. Publish useful content consistently.\n6. Track inquiries and conversions.\n7. Improve based on results.\n\nStart focused rather than trying every platform." },
+
+            { keys: ["social media", "instagram marketing", "instagram"], answer: "📱 INSTAGRAM MARKETING\n\nWeekly content idea:\n• Monday: Educational tip.\n• Tuesday: Behind the scenes.\n• Wednesday: Customer problem and solution.\n• Thursday: Portfolio or case study.\n• Friday: Frequently asked question.\n• Saturday: Offer explanation.\n• Sunday: Weekly recap.\n\nUse clear captions and relevant calls to action." },
+
+            { keys: ["facebook marketing", "facebook"], answer: "📘 FACEBOOK MARKETING\n\n• Complete your business page.\n• Add accurate contact details.\n• Publish useful local content.\n• Join relevant community groups where promotion is allowed.\n• Respond professionally to comments.\n• Collect genuine customer reviews.\n\nAvoid spam posting." },
+
+            { keys: ["linkedin", "linkedin marketing"], answer: "💼 LINKEDIN GROWTH\n\n1. Complete your profile.\n2. Clearly describe your services.\n3. Upload portfolio examples.\n4. Connect with relevant professionals.\n5. Publish practical insights.\n6. Participate in useful discussions.\n7. Build relationships before pitching.\n\nBe transparent about your experience." },
+
+            { keys: ["seo", "search engine optimization"], answer: "🔍 SEO BASICS\n\nImprove your website's search visibility:\n• Use descriptive page titles.\n• Write useful original content.\n• Include relevant search terms naturally.\n• Make pages mobile-friendly.\n• Improve loading speed.\n• Use clear internal links.\n• Keep business information accurate.\n\nSEO takes time; avoid anyone guaranteeing instant rankings." },
+
+            { keys: ["google business", "google maps", "business profile"], answer: "📍 GOOGLE BUSINESS PROFILE\n\nFor an eligible local business:\n1. Create or claim the profile.\n2. Verify the business.\n3. Add accurate hours and contact details.\n4. Upload genuine photos.\n5. Choose appropriate categories.\n6. Respond to reviews.\n7. Keep information updated.\n\nFollow Google's current eligibility rules." },
+
+            { keys: ["advertising", "ads", "paid ads"], answer: "📣 PAID ADVERTISING\n\nBefore launching ads:\n• Define your target customer.\n• Choose one campaign goal.\n• Create a focused landing page.\n• Set a small test budget.\n• Track inquiries and conversions.\n• Compare results before increasing spend.\n\nDon't judge advertising only by views or likes." },
+
+            { keys: ["content marketing", "content"], answer: "✍️ CONTENT MARKETING\n\nCreate content that answers customer questions.\n\nUseful formats:\n• How-to guides.\n• Short educational videos.\n• Case studies.\n• Product demonstrations.\n• Common mistakes.\n• Customer FAQs.\n\nConsistency and usefulness beat random posting." },
+
+            { keys: ["email marketing", "newsletter"], answer: "📧 EMAIL MARKETING\n\nBuild an email list with permission.\n\nSend:\n1. A helpful welcome email.\n2. Useful educational content.\n3. Product or service updates.\n4. Relevant offers.\n5. Occasional feedback requests.\n\nInclude an unsubscribe option and follow applicable privacy rules." },
+
+            { keys: ["website", "business website", "web design"], answer: "🌐 BUSINESS WEBSITE STRATEGY\n\nA professional website should include:\n• Clear headline.\n• Description of services.\n• Portfolio or examples.\n• Benefits for customers.\n• Testimonials with permission.\n• Contact details.\n• Strong call-to-action.\n• Mobile-friendly layout.\n\nKeep navigation simple and make it easy to contact you." },
+
+            { keys: ["landing page"], answer: "🎯 LANDING PAGE DESIGN\n\nUse this structure:\n1. Attention-grabbing headline.\n2. Customer problem.\n3. Your solution.\n4. Main benefits.\n5. Evidence and examples.\n6. Pricing or offer details.\n7. Frequently asked questions.\n8. Contact button.\n\nGive visitors one primary action to take." },
+
+            { keys: ["conversion", "conversion rate"], answer: "📈 IMPROVE CONVERSIONS\n\nTry:\n• Clearer headlines.\n• More specific offers.\n• Faster page loading.\n• Simpler forms.\n• Visible contact options.\n• Real testimonials.\n• Better mobile experience.\n\nMeasure conversion rate before and after each change." },
+
+            { keys: ["customer service", "customer support"], answer: "🤝 CUSTOMER SERVICE\n\nExcellent support means:\n1. Reply respectfully.\n2. Listen carefully.\n3. Understand the problem.\n4. Explain the solution.\n5. Give realistic timelines.\n6. Follow through.\n7. Ask whether the issue was resolved.\n\nReliability creates trust." },
+
+            { keys: ["angry customer", "complaint", "unhappy customer"], answer: "🧯 HANDLE CUSTOMER COMPLAINTS\n\nUse this process:\n• Listen without interrupting.\n• Acknowledge the concern.\n• Ask clarifying questions.\n• Explain what you can do.\n• Give a realistic resolution timeline.\n• Follow up afterward.\n\nDon't argue publicly or make promises you cannot keep." },
+
+            { keys: ["customer retention", "retain customers"], answer: "🔁 CUSTOMER RETENTION\n\nKeep customers through:\n• Reliable quality.\n• Good communication.\n• Helpful follow-ups.\n• Consistent delivery.\n• Loyalty benefits where affordable.\n• Regular feedback collection.\n\nRetention is built through repeated good experiences." },
+
+            { keys: ["customer feedback", "feedback"], answer: "📝 COLLECT CUSTOMER FEEDBACK\n\nAsk three questions:\n1. What worked well?\n2. What could be improved?\n3. Would you recommend this service, and why?\n\nLook for repeated patterns instead of overreacting to one comment." },
+
+            { keys: ["testimonial", "review"], answer: "⭐ GET GENUINE TESTIMONIALS\n\nAfter completing a project:\n1. Ask whether the customer is satisfied.\n2. Request honest feedback.\n3. Ask permission before publishing it.\n4. Don't edit feedback to change its meaning.\n5. Never create fake reviews.\n\nAuthentic reviews are more valuable than manufactured praise." },
+
+            { keys: ["refund", "refund policy"], answer: "↩️ REFUND POLICY\n\nCreate a clear policy explaining:\n• What qualifies for a refund.\n• Applicable time limits.\n• Cancellation conditions.\n• How to request a refund.\n• How long processing may take.\n\nMake sure the policy follows applicable consumer-protection laws." },
+
+            { keys: ["freelancing", "freelancer"], answer: "💻 FREELANCING ADVICE\n\n1. Pick one service.\n2. Create 3 portfolio examples.\n3. Define your ideal client.\n4. Set transparent packages.\n5. Build a simple portfolio website.\n6. Find relevant opportunities.\n7. Deliver work on time.\n8. Collect feedback.\n\nStart with a manageable workload." },
+
+            { keys: ["portfolio"], answer: "🖼️ BUILD A STRONG PORTFOLIO\n\nInclude:\n• A short introduction.\n• Your services.\n• Three strong projects.\n• Your process.\n• Relevant tools and skills.\n• Results you can honestly demonstrate.\n• Contact information.\n\nClearly label sample projects so nobody mistakes them for paid client work." },
+
+            { keys: ["agency", "start agency", "digital agency"], answer: "🏢 START A DIGITAL AGENCY\n\nStart with one service, such as website design or social media management.\n\nThen:\n1. Choose a niche.\n2. Create sample work.\n3. Define packages.\n4. Build a simple website.\n5. Find your first customers.\n6. Document your workflow.\n7. Expand services only when demand supports it." },
+
+            { keys: ["website design business", "web design agency"], answer: "🌐 WEB DESIGN BUSINESS\n\nPotential services:\n• Business websites.\n• Restaurant websites.\n• Portfolio websites.\n• Landing pages.\n• Website maintenance.\n• Website redesigns.\n\nCreate a package with defined pages, revisions, hosting responsibilities, delivery dates and support terms." },
+
+            { keys: ["restaurant website", "restaurant"], answer: "🍽️ RESTAURANT WEBSITE STRATEGY\n\nEssential sections:\n1. Restaurant introduction.\n2. Food menu.\n3. Photo gallery.\n4. Location and map.\n5. Opening hours.\n6. Reservation or contact details.\n7. Delivery links where applicable.\n\nUse real, high-quality food photographs and ensure menu information stays updated." },
+
+            { keys: ["local business", "local marketing"], answer: "📍 LOCAL BUSINESS GROWTH\n\nFor a local shop:\n• Maintain an accurate online listing.\n• Create a simple website.\n• Share regular updates.\n• Encourage honest customer reviews.\n• Collaborate with complementary businesses.\n• Promote relevant local offers.\n\nFocus on the customers who can realistically visit or use the service." },
+
+            { keys: ["product launch", "launch product"], answer: "🚀 PRODUCT LAUNCH PLAN\n\nBefore launch:\n1. Test product quality.\n2. Identify your audience.\n3. Prepare product photos.\n4. Write a clear product description.\n5. Set pricing.\n6. Prepare customer support.\n7. Announce the launch.\n8. Collect early feedback.\n\nHave a plan for handling issues after launch." },
+
+            { keys: ["ecommerce", "e-commerce", "online store"], answer: "🛒 E-COMMERCE BUSINESS\n\nFocus on:\n• Product selection.\n• Reliable suppliers.\n• Clear product photography.\n• Accurate descriptions.\n• Transparent shipping costs.\n• Secure payments.\n• Return policies.\n• Customer support.\n\nCalculate delivery, packaging and payment fees before setting prices." },
+
+            { keys: ["dropshipping", "drop shipping"], answer: "📦 DROPSHIPPING\n\nDropshipping removes the need to hold your own inventory, but it does not remove business risk.\n\nConsider:\n• Supplier reliability.\n• Product quality.\n• Shipping times.\n• Return handling.\n• Customer complaints.\n• Advertising costs.\n• Actual profit after fees.\n\nOrder and evaluate samples before promoting a product." },
+
+            { keys: ["supplier", "suppliers", "vendor"], answer: "🏭 FINDING GOOD SUPPLIERS\n\nEvaluate suppliers based on:\n• Product quality.\n• Consistency.\n• Pricing.\n• Minimum order quantity.\n• Delivery reliability.\n• Return policies.\n• Communication.\n\nTest a small order before making a large commitment." },
+
+            { keys: ["inventory", "stock management"], answer: "📦 INVENTORY MANAGEMENT\n\nTrack:\n1. Opening stock.\n2. Purchases.\n3. Sales.\n4. Returns.\n5. Damaged goods.\n6. Closing stock.\n\nIdentify fast-moving and slow-moving items. Avoid buying large quantities without demand evidence." },
+
+            { keys: ["operations", "business operations"], answer: "⚙️ IMPROVE BUSINESS OPERATIONS\n\nDocument repeatable tasks:\n• Customer inquiries.\n• Order processing.\n• Payments.\n• Project delivery.\n• Quality checks.\n• Customer follow-ups.\n\nCreate simple checklists so important steps aren't forgotten." },
+
+            { keys: ["time management", "manage time"], answer: "⏰ TIME MANAGEMENT\n\nTry this daily system:\n1. Choose three important tasks.\n2. Schedule focused work periods.\n3. Group similar tasks together.\n4. Limit unnecessary notifications.\n5. Leave time for unexpected work.\n6. Review progress at the end of the day.\n\nPrioritize meaningful work, not just a long task list." },
+
+            { keys: ["productivity", "productive"], answer: "⚡ IMPROVE PRODUCTIVITY\n\n• Start with your highest-priority task.\n• Break big projects into small actions.\n• Use checklists.\n• Batch routine communication.\n• Reduce unnecessary meetings.\n• Review results weekly.\n\nA productive day is about progress, not simply being busy." },
+
+            { keys: ["automation", "automate business"], answer: "🤖 BUSINESS AUTOMATION\n\nGood automation opportunities:\n• Appointment reminders.\n• Invoice notifications.\n• Lead tracking.\n• Form submissions.\n• Customer FAQs.\n• Task notifications.\n• Basic reporting.\n\nAutomate stable processes first. Keep human review for important customer and financial decisions." },
+
+            { keys: ["ai business", "artificial intelligence"], answer: "🤖 USING AI IN BUSINESS\n\nAI can help with:\n• Drafting marketing ideas.\n• Summarizing customer feedback.\n• Creating content outlines.\n• Organizing information.\n• Brainstorming product ideas.\n• Preparing first drafts.\n\nVerify outputs, protect confidential data and keep human oversight." },
+
+            { keys: ["software", "business tools", "tools"], answer: "🧰 BUSINESS TOOLS\n\nUseful tool categories:\n• Documents and spreadsheets.\n• Project management.\n• Graphic design.\n• Website building.\n• Email communication.\n• Accounting and invoicing.\n• Customer relationship management.\n\nStart with free plans where practical and upgrade only when a real need appears." },
+
+            { keys: ["crm", "customer relationship"], answer: "📇 CRM BASICS\n\nA customer relationship management system helps track:\n• Contact details.\n• Customer requirements.\n• Previous conversations.\n• Sales opportunities.\n• Follow-up dates.\n• Project status.\n\nEven a well-organized spreadsheet can work when starting out." },
+
+            { keys: ["team", "team management"], answer: "👥 TEAM MANAGEMENT\n\nGood team management requires:\n1. Clear responsibilities.\n2. Defined deadlines.\n3. Written processes.\n4. Regular communication.\n5. Useful feedback.\n6. Fair expectations.\n\nSet people up to succeed rather than relying on constant supervision." },
+
+            { keys: ["hiring", "hire employee"], answer: "🧑‍💼 HIRING\n\nBefore hiring:\n• Identify the exact work needed.\n• Define responsibilities.\n• Set a realistic budget.\n• Check relevant skills.\n• Discuss expectations clearly.\n• Follow applicable employment rules.\n\nFor a small business, consider whether a part-time specialist is sufficient." },
+
+            { keys: ["leadership", "leader"], answer: "🧭 BUSINESS LEADERSHIP\n\nEffective leadership includes:\n• Making clear decisions.\n• Communicating expectations.\n• Listening to feedback.\n• Taking responsibility.\n• Solving problems early.\n• Giving credit to others.\n\nTrust is built through consistency." },
+
+            { keys: ["partnership", "business partner"], answer: "🤝 BUSINESS PARTNERSHIPS\n\nBefore partnering:\n1. Discuss responsibilities.\n2. Define contributions.\n3. Agree on decision-making.\n4. Discuss profit sharing.\n5. Establish exit arrangements.\n6. Put agreed terms in a proper written agreement.\n\nGet professional legal advice before signing." },
+
+            { keys: ["networking", "business connections"], answer: "🌐 BUSINESS NETWORKING\n\n• Attend relevant events.\n• Join professional communities.\n• Ask thoughtful questions.\n• Share useful knowledge.\n• Follow up after genuine conversations.\n• Offer help where appropriate.\n\nBuild real relationships rather than collecting contacts." },
+
+            { keys: ["negotiation", "negotiate"], answer: "🤝 NEGOTIATION TIPS\n\n1. Know your minimum acceptable terms.\n2. Understand the other party's needs.\n3. Explain your reasoning.\n4. Consider alternatives.\n5. Put final agreements in writing.\n\nGood negotiation should aim for a workable agreement, not simply winning an argument." },
+
+            { keys: ["risk management", "business risk", "risks"], answer: "⚠️ BUSINESS RISK MANAGEMENT\n\nIdentify risks in:\n• Cash flow.\n• Customer concentration.\n• Supplier reliability.\n• Data security.\n• Delivery quality.\n• Regulatory compliance.\n\nFor each risk, decide how to prevent it and what to do if it occurs." },
+
+            { keys: ["legal", "registration", "register business"], answer: "📜 BUSINESS REGISTRATION\n\nBusiness registration depends on your country, business structure and activity.\n\nIn India, possible structures include proprietorships, partnerships, LLPs and companies. Their requirements differ.\n\nCheck official government guidance and consult a qualified CA or lawyer before choosing a structure. Minors should involve a parent or guardian in any formal business arrangements." },
+
+            { keys: ["contract", "agreement"], answer: "📄 BUSINESS CONTRACTS\n\nA service agreement commonly covers:\n• Parties involved.\n• Scope of work.\n• Deliverables.\n• Payment terms.\n• Deadlines.\n• Revisions.\n• Ownership rights.\n• Cancellation terms.\n• Confidentiality.\n\nHave important agreements reviewed by a qualified lawyer." },
+
+            { keys: ["intellectual property", "copyright", "trademark"], answer: "©️ PROTECT YOUR BRAND AND WORK\n\nConsider:\n• Trademark protection for eligible brand identifiers.\n• Copyright rules for creative work.\n• Written ownership terms.\n• Permission for images, fonts and software.\n• Proper licensing.\n\nDo not assume that using something online makes it free for commercial use." },
+
+            { keys: ["privacy", "data protection", "customer data"], answer: "🔐 CUSTOMER DATA PROTECTION\n\n• Collect only necessary information.\n• Explain how data is used.\n• Restrict access.\n• Use strong passwords.\n• Protect backups.\n• Avoid sharing customer information casually.\n• Follow applicable privacy laws.\n\nTrust is part of your business reputation." },
+
+            { keys: ["scaling", "scale business", "grow business"], answer: "📈 SCALE YOUR BUSINESS\n\nBefore expanding:\n1. Confirm consistent customer demand.\n2. Understand your profit margins.\n3. Document delivery processes.\n4. Identify bottlenecks.\n5. Improve repeatable systems.\n6. Expand gradually.\n\nGrowth without operational control can create unnecessary costs." },
+
+            { keys: ["business growth", "grow faster"], answer: "🌱 BUSINESS GROWTH PLAN\n\nFocus on three areas:\n1. More qualified customers.\n2. Better customer retention.\n3. More efficient delivery.\n\nMeasure leads, sales, repeat customers, profit and customer satisfaction each month." },
+
+            { keys: ["kpi", "metrics", "business metrics"], answer: "📊 BUSINESS KPIs\n\nUseful metrics include:\n• Monthly revenue.\n• Gross profit margin.\n• Net profit.\n• Number of leads.\n• Conversion rate.\n• Customer acquisition cost.\n• Repeat purchase rate.\n• Customer satisfaction.\n\nChoose metrics connected to your actual business goals." },
+
+            { keys: ["goals", "business goals"], answer: "🎯 SET BUSINESS GOALS\n\nUse SMART goals:\n• Specific.\n• Measurable.\n• Achievable.\n• Relevant.\n• Time-bound.\n\nExample: Publish four portfolio projects within 30 days. Review your progress weekly." },
+
+            { keys: ["failure", "business failed", "business struggling"], answer: "🛠️ WHEN A BUSINESS STRUGGLES\n\nDon't panic. Diagnose the problem:\n1. Is demand too low?\n2. Are prices too low?\n3. Are costs too high?\n4. Is customer service weak?\n5. Is marketing reaching the wrong audience?\n6. Are operations unreliable?\n\nChange one major issue at a time and measure the result." },
+
+            { keys: ["motivation", "discipline", "entrepreneurship"], answer: "🔥 ENTREPRENEUR MINDSET\n\nRemember:\n• Progress takes time.\n• Small experiments teach useful lessons.\n• Customer feedback matters.\n• Not every idea will work.\n• Consistency matters more than excitement.\n• Protect your health and personal time.\n\nBuild a sustainable business, not just a busy one." },
+
+            { keys: ["business books", "books"], answer: "📚 BUSINESS BOOKS TO EXPLORE\n\n1. The Lean Startup — Eric Ries.\n2. The Personal MBA — Josh Kaufman.\n3. The E-Myth Revisited — Michael E. Gerber.\n4. Influence — Robert Cialdini.\n5. The Psychology of Money — Morgan Housel.\n\nChoose a book based on the business skill you want to improve." },
+
+            { keys: ["side hustle", "side business"], answer: "💡 SIDE HUSTLE IDEAS\n\nConsider:\n• Website creation.\n• Video editing.\n• Graphic design.\n• Tutoring.\n• Digital templates.\n• Photography.\n• Social media content.\n\nTest one idea with a small project. Check local rules and involve a parent or guardian for formal payments or agreements if you're under 18." },
+
+            { keys: ["online business"], answer: "🌍 ONLINE BUSINESS IDEAS\n\nPossible models:\n1. Freelance services.\n2. Digital products.\n3. Educational content.\n4. E-commerce.\n5. Subscription services.\n6. Website development.\n7. Online consulting.\n\nChoose a model with clear customer demand and manageable startup costs." },
+
+            { keys: ["subscription", "recurring revenue"], answer: "🔄 RECURRING REVENUE\n\nPossible recurring services:\n• Website maintenance.\n• Monthly design packages.\n• Software subscriptions.\n• Content management.\n• Ongoing technical support.\n\nClearly explain monthly deliverables, cancellation terms and support limits." },
+
+            { keys: ["upselling", "upsell"], answer: "⬆️ UPSELLING\n\nOffer a useful upgrade when it genuinely benefits the customer.\n\nExample for website design:\n• Basic website.\n• Website plus SEO setup.\n• Website plus ongoing maintenance.\n\nExplain the additional value and cost. Don't pressure customers." },
+
+            { keys: ["cross selling", "cross-selling"], answer: "🔀 CROSS-SELLING\n\nOffer related services that complement the original purchase.\n\nExample:\nA customer purchasing a website might also need hosting setup, maintenance or content updates.\n\nOnly recommend services that fit their actual requirements." },
+
+            { keys: ["business presentation", "pitch deck"], answer: "📊 BUSINESS PITCH DECK\n\nA simple pitch deck contains:\n1. Business overview.\n2. Problem.\n3. Solution.\n4. Target market.\n5. Business model.\n6. Competitors.\n7. Marketing plan.\n8. Financial assumptions.\n9. Team.\n10. Next steps.\n\nUse clear facts and label projections as estimates." },
+
+            { keys: ["business email", "professional email"], answer: "📨 PROFESSIONAL BUSINESS EMAIL\n\nUse this structure:\n• Specific subject.\n• Polite greeting.\n• Reason for writing.\n• Relevant details.\n• Clear next step.\n• Professional sign-off.\n\nKeep the email short and proofread it before sending." },
+
+            { keys: ["customer acquisition cost", "cac"], answer: "📉 CUSTOMER ACQUISITION COST\n\nCAC = Total customer acquisition spending ÷ Number of new customers acquired.\n\nExample:\nSpend ₹5,000 and acquire 10 customers.\nCAC = ₹500 per customer.\n\nInclude relevant sales and marketing costs when calculating it." },
+
+            { keys: ["lifetime value", "customer lifetime value", "ltv"], answer: "💎 CUSTOMER LIFETIME VALUE\n\nCustomer lifetime value estimates the revenue or profit a customer may generate over the relationship.\n\nConsider:\n• Average purchase value.\n• Purchase frequency.\n• Customer retention.\n• Gross margin.\n\nUse realistic historical data rather than optimistic guesses." },
+
+            { keys: ["productivity tools"], answer: "🧰 PRODUCTIVITY TOOL CATEGORIES\n\nTry tools for:\n• Task tracking.\n• Shared documents.\n• Calendar scheduling.\n• Invoicing.\n• Password management.\n• Design.\n• Communication.\n\nChoose tools that simplify your workflow instead of creating more work." },
+
+            { keys: ["website maintenance", "maintenance"], answer: "🔧 WEBSITE MAINTENANCE SERVICE\n\nA maintenance package may include:\n• Software updates.\n• Backup checks.\n• Security checks.\n• Broken-link checks.\n• Content updates.\n• Basic performance checks.\n\nDefine response times and exactly what is excluded from the package." },
+
+            { keys: ["business model"], answer: "🏗️ CHOOSE A BUSINESS MODEL\n\nCommon models:\n• Service-based.\n• Product-based.\n• Subscription.\n• Marketplace.\n• Commission-based.\n• Licensing.\n• Advertising-supported.\n\nCompare startup costs, customer demand, operating complexity and revenue predictability." },
+
+            { keys: ["niche", "choose a niche"], answer: "🎯 CHOOSE A BUSINESS NICHE\n\nA useful niche combines:\n1. Customers with a real problem.\n2. A service you can deliver well.\n3. Evidence of willingness to pay.\n4. A way to reach those customers.\n\nStart specific. You can broaden your services later." },
+
+            { keys: ["brand awareness"], answer: "📣 BUILD BRAND AWARENESS\n\n• Publish useful content.\n• Maintain consistent branding.\n• Collaborate with relevant creators.\n• Participate in local communities.\n• Share real project examples.\n• Encourage word of mouth.\n\nTrack whether awareness produces relevant inquiries, not just impressions." },
+
+            { keys: ["business analytics", "analytics"], answer: "📊 BUSINESS ANALYTICS\n\nReview your numbers monthly:\n• Revenue by service.\n• Profit by service.\n• Marketing channel performance.\n• Customer acquisition cost.\n• Repeat purchases.\n• Customer complaints.\n\nUse the data to make one or two concrete improvements." },
+
+            { keys: ["seasonal marketing", "seasonal"], answer: "🎉 SEASONAL MARKETING\n\nPlan promotions around relevant events and customer needs.\n\nPrepare:\n• Campaign theme.\n• Offer details.\n• Promotional content.\n• Inventory or delivery capacity.\n• Budget.\n• Campaign end date.\n\nAvoid discounts that make the campaign unprofitable." },
+
+            { keys: ["partnership marketing", "collaboration"], answer: "🤝 COLLABORATION MARKETING\n\nPartner with a business serving a similar audience but offering a different service.\n\nExamples:\n• A photographer and event planner.\n• A designer and printer.\n• A web developer and marketing consultant.\n\nAgree on responsibilities and obtain permission before sharing customer information." },
+
+            { keys: ["crisis", "business crisis"], answer: "🚨 BUSINESS CRISIS PLAN\n\nPrepare a simple response plan:\n1. Identify the issue.\n2. Protect customers and essential operations.\n3. Communicate accurate information.\n4. Assign responsibilities.\n5. Document decisions.\n6. Review what happened.\n\nFor serious legal, financial or safety issues, get qualified professional support." },
+
+            { keys: ["exit strategy", "sell business"], answer: "🚪 BUSINESS EXIT PLANNING\n\nPossible options include:\n• Selling the business.\n• Transferring ownership.\n• Closing operations responsibly.\n• Passing the business to another owner.\n\nMaintain accurate financial records, contracts and operating documentation. Seek professional legal and financial advice." },
+
+            { keys: ["work life balance", "burnout", "stress business"], answer: "🌿 SUSTAINABLE BUSINESS HABITS\n\n• Set realistic working hours.\n• Take breaks.\n• Plan your week.\n• Delegate when practical.\n• Avoid accepting every project.\n• Keep time for learning and rest.\n\nA sustainable business should support your life, not consume it." }
+
+        ];
+
+        // ======================================================
+        // RESPONSE ENGINE
+        // ======================================================
+
+        const chat = document.getElementById("chat");
+        const input = document.getElementById("input");
+        const form = document.getElementById("form");
+
+        let conversation = [];
+        let isThinking = false;
+
+        function normalize(text) {
+            return text.toLowerCase()
+                .replace(/[^\w\s₹]/g, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+        }
+
+        function getResponse(question) {
+            const q = normalize(question);
+            let best = null;
+            let bestScore = 0;
+
+            for (const item of knowledge) {
+                let score = 0;
+
+                for (const key of item.keys) {
+                    const k = normalize(key);
+
+                    if (q.includes(k)) {
+                        score += k.split(" ").length * 3 + k.length / 10;
+                    }
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    best = item;
+                }
+            }
+
+            if (best && bestScore >= 3) return best.answer;
+
+            return smartFallback(question);
+        }
+
+        function smartFallback(question) {
+            const q = normalize(question);
+
+            if (q.includes("hello") || q.includes("hi") || q.includes("hey")) {
+                return "👋 HELLO! I'm BizBuddy AI.\n\nI can help with starting businesses, finding clients, marketing, sales, pricing, finance, freelancing and business growth.\n\nWhat business challenge are you working on today?";
+            }
+
+            if (q.includes("thank")) {
+                return "You're welcome! 🚀\n\nKeep testing your ideas, learning from customers and improving your business systems. I'm here to help with your next business question.";
+            }
+
+            if (q.includes("help")) {
+                return "💼 HERE'S WHAT I CAN HELP WITH:\n\n• Starting a business\n• Business ideas\n• Pricing and profit\n• Finding customers\n• Marketing and SEO\n• Sales strategies\n• Website development\n• Freelancing\n• Customer support\n• Business planning\n• Productivity\n• Business automation\n\nTry asking a specific question!";
+            }
+
+            if (q.includes("who are you") || q.includes("your name")) {
+                return "I'm BizBuddy AI, your practical business-advice assistant! 🚀\n\nMy goal is to help you understand business challenges, explore ideas and create actionable plans.";
+            }
+
+            return "🤔 LET'S UNDERSTAND YOUR BUSINESS QUESTION.\n\nI don't have a specific predefined answer for that exact question yet.\n\nTry telling me:\n1. What type of business are you working on?\n2. What problem are you trying to solve?\n3. What result are you hoping to achieve?\n\nI can then help you build a practical step-by-step plan.\n\nYou can also ask about marketing, sales, pricing, clients, finance, websites or freelancing.";
+        }
+
+        // ======================================================
+        // CHAT UI
+        // ======================================================
+
+        function addMessage(text, type) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "message " + type;
+
+            const avatar = document.createElement("div");
+            avatar.className = "msg-avatar";
+            avatar.textContent = type === "user" ? "👤" : "🚀";
+
+            const content = document.createElement("div");
+            content.className = "msg-content";
+
+            const name = document.createElement("div");
+            name.className = "msg-name";
+            name.textContent = type === "user" ? "YOU" : "BIZBUDDY AI";
+
+            const bubble = document.createElement("div");
+            bubble.className = "msg-text";
+            bubble.textContent = text;
+
+            content.appendChild(name);
+            content.appendChild(bubble);
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(content);
+
+            chat.appendChild(wrapper);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function showTyping() {
+            const typing = document.createElement("div");
+            typing.id = "typing";
+            typing.className = "message";
+            typing.innerHTML = '<div class="msg-avatar">🚀</div><div class="msg-content"><div class="msg-name">BIZBUDDY AI</div><div class="typing">BizBuddy is thinking...</div></div>';
+            chat.appendChild(typing);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById("typing");
+            if (typing) typing.remove();
+        }
+
+        function ask(question) {
+            if (isThinking || !question.trim()) return;
+
+            document.getElementById("welcome")?.remove();
+
+            isThinking = true;
+            addMessage(question, "user");
+            conversation.push({ role: "user", text: question });
+
+            showTyping();
+
+            const response = getResponse(question);
+
+            setTimeout(() => {
+                removeTyping();
+                addMessage(response, "bot");
+                conversation.push({ role: "bot", text: response });
+                isThinking = false;
+            }, 650);
+        }
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const question = input.value.trim();
+            if (!question) return;
+            input.value = "";
+            ask(question);
+        });
+
+        function newChat() {
+            conversation = [];
+            chat.innerHTML = `
+ <div id="welcome">
+  <div class="welcome">
+   <h1>Welcome back.<br><span class="gradient">What's your next move?</span></h1>
+   <p>Let's solve your next business challenge.</p>
+  </div>
+  <div class="suggestions">
+   <button class="suggestion" onclick="ask('Give me business ideas')"><strong>💡 Business ideas</strong><small>Explore new opportunities</small></button>
+   <button class="suggestion" onclick="ask('How do I get clients?')"><strong>🎯 Find clients</strong><small>Grow your customer base</small></button>
+   <button class="suggestion" onclick="ask('Marketing strategy')"><strong>📢 Marketing</strong><small>Promote your business</small></button>
+   <button class="suggestion" onclick="ask('Pricing strategy')"><strong>💰 Pricing</strong><small>Build better packages</small></button>
+  </div>
+ </div>`;
+        }
+
+        // Enter to send is already supported by the form.
+        // Expose the knowledge base count in the browser console.
+        console.log("BizBuddy AI loaded:", knowledge.length, "predefined responses.");
+
+    </script>
+</body>
+
+</html>

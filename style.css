@@ -1,0 +1,266 @@
+:root {
+    --primary: #0b3d91;
+    --accent: #00c2a8;
+    --dark: #0d1b2a;
+    --light: #f4f7fb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+header {
+    background: var(--dark);
+    color: #fff;
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+}
+
+header .logo {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-size: 0.95rem;
+}
+
+nav a:hover {
+    color: var(--accent);
+}
+
+.hero {
+    background: linear-gradient(135deg, var(--dark), var(--primary));
+    color: #fff;
+    text-align: center;
+    padding: 6rem 5%;
+}
+
+.hero h1 {
+    font-size: 2.6rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.15rem;
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    opacity: 0.9;
+}
+
+.btn {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--dark);
+    padding: 0.85rem 2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+section {
+    padding: 4rem 5%;
+}
+
+section h2 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-size: 2rem;
+    color: var(--primary);
+}
+
+.services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--light);
+    padding: 2rem;
+    border-radius: 10px;
+    border-top: 4px solid var(--accent);
+}
+
+.card h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.about {
+    background: var(--light);
+    text-align: center;
+}
+
+.about p {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+}
+
+form {
+    max-width: 560px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+}
+
+input,
+textarea {
+    padding: 0.8rem;
+    border: 1px solid #ccd6e0;
+    border-radius: 6px;
+    font: inherit;
+    width: 100%;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 0.85rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--dark);
+}
+
+footer {
+    background: var(--dark);
+    color: #aab4c0;
+    text-align: center;
+    padding: 2rem 5%;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+    nav {
+        display: none;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
+
+.quote-section {
+    background: #0b3d91;
+    color: #fff;
+    padding: 4rem 5%;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .quote-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .quote-section h2 {
+    font-size: 2rem;
+    line-height: 1.25;
+    margin-bottom: 0.8rem;
+  }
+  .quote-sub {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+  .quote-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    text-align: left;
+  }
+  .quote-form .field {
+    display: flex;
+    flex-direction: column;
+  }
+  .quote-form input,
+  .quote-form select,
+  .quote-form textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid #cfd8e3;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 0.97rem;
+    color: #0d1b2a;
+    background: #fff;
+  }
+  .quote-form textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  .quote-form input:focus,
+  .quote-form select:focus,
+  .quote-form textarea:focus {
+    outline: 2px solid #00c2a8;
+    border-color: #00c2a8;
+  }
+  .quote-form .error {
+    display: none;
+    color: #ffd2cc;
+    font-size: 0.82rem;
+    margin-top: 0.3rem;
+  }
+  .quote-form .field.invalid input,
+  .quote-form .field.invalid select,
+  .quote-form .field.invalid textarea {
+    border: 2px solid #ff8a7a;
+  }
+  .quote-form .field.invalid .error {
+    display: block;
+  }
+  .quote-btn {
+    width: 100%;
+    background: #00c2a8;
+    color: #0d1b2a;
+    border: none;
+    padding: 1rem;
+    border-radius: 6px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 0.3rem;
+  }
+  .quote-btn:hover {
+    opacity: 0.92;
+  }
+  .quote-success {
+    display: none;
+    text-align: center;
+    font-weight: 600;
+    color: #00c2a8;
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 520px) {
+    .quote-section h2 {
+      font-size: 1.6rem;
+    }
+  }

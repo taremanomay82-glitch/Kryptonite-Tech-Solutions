@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0f1222;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 12px;
+      padding: 40px 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .card h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 28px;
+    }
+
+    .subtitle a {
+      color: #6d4aff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    form { text-align: left; }
+
+    label {
+      display: block;
+      font-size: 14px;
+      color: #222;
+      margin-bottom: 6px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      margin-bottom: 18px;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #6d4aff;
+      box-shadow: 0 0 0 3px rgba(109, 74, 255, 0.2);
+    }
+
+    textarea { resize: vertical; min-height: 110px; }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      background: #6d4aff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    button:hover { background: #5a3ae0; }
+
+    .footer-link {
+      display: block;
+      margin-top: 22px;
+      font-size: 14px;
+      color: #6d4aff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Contact us</h1>
+    <p class="subtitle">Have a question? <a href="#">Send us a message</a></p>
+
+    <form action="/submit-contact" method="POST">
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" name="subject">
+
+      <button type="submit">Send message</button>
+    </form>
+
+    <a class="footer-link" href="#">Can't reach us? Email support directly</a>
+  </div>
+</body>
+</html>

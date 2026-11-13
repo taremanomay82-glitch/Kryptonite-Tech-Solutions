@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart | Krypnite Tech Solutions</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0b1220;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #e6edf7;
+      min-height: 100vh;
+    }
+    nav {
+      padding: 16px 40px;
+      border-bottom: 1px solid #1c2a40;
+      font-weight: 700;
+      font-size: 18px;
+      color: #fff;
+    }
+    .container { max-width: 1100px; margin: 36px auto; padding: 0 20px; }
+    h1 { font-size: 28px; margin-bottom: 24px; }
+    .layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    .card {
+      background: #111a2e;
+      border: 1px solid #1f2d46;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h2 { font-size: 18px; margin-bottom: 6px; }
+    .muted { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+    .plan-title { font-size: 22px; font-weight: 700; color: #fff; margin: 14px 0 4px; }
+    .plan-price { font-size: 26px; font-weight: 700; color: #2ec4b6; margin: 8px 0; }
+    .plan-price small { font-size: 13px; color: #94a3b8; font-weight: 400; }
+    label.field { display: block; font-size: 13px; color: #cbd5e1; margin: 16px 0 6px; }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #2a3b5c;
+      border-radius: 6px;
+      background: #0b1220;
+      color: #e6edf7;
+      font-size: 14px;
+    }
+    .perks { list-style: none; font-size: 14px; margin-top: 16px; }
+    .perks li { padding: 6px 0; color: #cbd5e1; }
+    .perks li::before { content: "✓ "; color: #2ec4b6; font-weight: 700; }
+    .search { display: flex; gap: 8px; margin-top: 14px; }
+    .search input { flex: 1; }
+    .btn-outline {
+      padding: 11px 18px;
+      background: transparent;
+      color: #2ec4b6;
+      border: 1px solid #2ec4b6;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .summary-row { display: flex; justify-content: space-between; font-size: 14px; padding: 7px 0; color: #cbd5e1; }
+    .total-row {
+      display: flex; justify-content: space-between;
+      border-top: 1px solid #1f2d46;
+      margin-top: 12px; padding-top: 14px;
+      font-size: 18px; font-weight: 700; color: #fff;
+    }
+    .note { font-size: 12px; color: #94a3b8; margin-top: 10px; }
+    .continue {
+      width: 100%;
+      padding: 14px;
+      margin-top: 18px;
+      background: #2ec4b6;
+      color: #0b1220;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .continue:hover { background: #26a89b; }
+    .guarantee { text-align: center; font-size: 13px; color: #94a3b8; margin-top: 16px; }
+    @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav>Krypnite Tech Solutions</nav>
+
+  <div class="container">
+    <h1>Your cart</h1>
+
+    <div class="layout">
+      <div>
+        <div class="card">
+          <h2>Selected package</h2>
+          <p class="muted">Website creation, delivered as a one-time payment.</p>
+
+          <label class="field" for="planSelect">Package</label>
+          <select id="planSelect">
+            <option value="starter">Starter</option>
+            <option value="business">Business (Most Popular)</option>
+            <option value="premium">Premium</option>
+          </select>
+
+          <div class="plan-title" id="planName">Business</div>
+          <div class="plan-price" id="planPrice">₹9,999 <small>one-time</small></div>
+
+          <ul class="perks" id="planFeatures"></ul>
+        </div>
+
+        <div class="card">
+          <h2>Secure your domain</h2>
+          <p class="muted">Search for a domain name for your business. Domain registration is arranged after your order.</p>
+          <div class="search">
+            <input type="text" placeholder="yourbusiness.com">
+            <button type="button" class="btn-outline">Search</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card">
+        <h2>Order summary</h2>
+        <p class="muted" style="margin-bottom: 12px;" id="summaryPlan">Business package</p>
+
+        <div class="summary-row">
+          <span id="summaryLabel">Business package</span>
+          <span id="summaryPrice">₹9,999</span>
+        </div>
+        <div class="summary-row">
+          <span>Taxes</span>
+          <span>Calculated at checkout</span>
+        </div>
+
+        <div class="total-row">
+          <span>Total</span>
+          <span id="totalPrice">₹9,999</span>
+        </div>
+
+        <form action="/create-checkout-session" method="POST" id="checkoutForm">
+          <input type="hidden" name="plan" id="planInput" value="business">
+          <button class="continue" type="submit">Continue to payment</button>
+        </form>
+
+        <p class="guarantee">Secure payment powered by Stripe</p>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const plans = {
+      starter: {
+        name: "Starter",
+        price: "₹5,999",
+        features: ["Up to 5 pages", "Mobile-friendly design", "Contact form", "Basic search engine setup", "Delivery in about 14 days"]
+      },
+      business: {
+        name: "Business",
+        price: "₹9,999",
+        features: ["Up to 10 pages", "Custom design tailored to your brand", "Booking or enquiry form", "Speed and SEO optimisation", "Google Business Profile setup guidance", "Basic analytics setup"]
+      },
+      premium: {
+        name: "Premium",
+        price: "₹19,999",
+        features: ["Unlimited pages", "Custom features and integrations", "E-commerce ready", "Advanced SEO strategy", "Priority support for 30 days"]
+      }
+    };
+
+    const select = document.getElementById("planSelect");
+    const planInput = document.getElementById("planInput");
+
+    function showPlan(key) {
+      const plan = plans[key] || plans.business;
+      const k = plans[key] ? key : "business";
+      select.value = k;
+      planInput.value = k;
+      document.getElementById("planName").textContent = plan.name;
+      document.getElementById("planPrice").innerHTML = plan.price + " <small>one-time</small>";
+      document.getElementById("summaryPlan").textContent = plan.name + " package";
+      document.getElementById("summaryLabel").textContent = plan.name + " package";
+      document.getElementById("summaryPrice").textContent = plan.price;
+      document.getElementById("totalPrice").textContent = plan.price;
+      document.getElementById("planFeatures").innerHTML =
+        plan.features.map(f => "<li>" + f + "</li>").join("");
+    }
+
+    // Read the plan from the URL, e.g. payment.html?plan=premium
+    const fromUrl = new URLSearchParams(window.location.search).get("plan");
+    select.addEventListener("change", () => showPlan(select.value));
+    showPlan(fromUrl || "business");
+  </script>
+</body>
+</html>
